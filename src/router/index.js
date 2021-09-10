@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
+import Welcome from '../components/Welcome.vue'
+import Users from '../components/user/Users.vue'
 
 Vue.use(VueRouter)
 
@@ -18,7 +20,18 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    redirect: '/welcome',
+    children: [
+      {
+        path: '/welcome',
+        component: Welcome
+      },
+      {
+        path: '/users',
+        component: Users
+      }
+    ]
   }
   // {
   //   path: '/about',
@@ -31,10 +44,11 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  // mode: 'history',
   routes
 })
 
-// 挂在路由导航守卫
+// 挂载路由导航守卫
 router.beforeEach((to, from, next) => {
   // to 将要访问的路径
   // from 代表从哪个路径过来
