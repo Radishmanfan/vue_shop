@@ -12,7 +12,7 @@
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input v-model="queryInfo.query" placeholder="请输入内容" clearable @clear="getUserList">
+          <el-input v-model="querInfo.query" placeholder="请输入内容" clearable @clear="getUserList">
             <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
@@ -65,9 +65,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="queryInfo.pagenum"
+        :current-page="querInfo.pagenum"
         :page-sizes="[1, 2, 5, 10]"
-        :page-size="queryInfo.pagesize"
+        :page-size="querInfo.pagesize"
         layout="sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
@@ -160,7 +160,7 @@
 				cb(new Error('请输入合法的手机号'))
 			}
 			return {
-				queryInfo: {
+				querInfo: {
 					query: '',
 					pagenum: 1, // 当前page
 					pagesize: 2 // 每页显示条数
@@ -273,7 +273,7 @@
 			// 获取用户列表
 			async getUserList() {
 				const { data: res } = await this.$http.get('users', {
-					params: this.queryInfo
+					params: this.querInfo
 				})
 				if (res.meta.status !== 200) {
 					return this.$message.error('获取用户列表失败！')
@@ -284,12 +284,12 @@
 			},
 			// 监听 pageSize改变的事件
 			handleSizeChange(pagesize) {
-				this.queryInfo.pagesize = pagesize
+				this.querInfo.pagesize = pagesize
 				this.getUserList()
 			},
 			// 监听 pagenum页码值改变的事件
 			handleCurrentChange(pagenum) {
-				this.queryInfo.pagenum = pagenum
+				this.querInfo.pagenum = pagenum
 				this.getUserList()
 			},
 			// 改变用户状态

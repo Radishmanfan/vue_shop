@@ -1,20 +1,36 @@
-html,body,#app{
+html,
+body,
+#app {
     height: 100%;
     margin: 0;
     padding: 0;
     min-width: 1366px;
 }
 
-.el-breadcrumb{
+.el-breadcrumb {
     margin-bottom: 15px;
     font-size: 12px;
 }
 
-.el-card{
+.el-card {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
 }
 
-.el-table{
-    margin-top:15px;
+.el-table {
+    margin-top: 15px;
     font-size: 12px;
+}
+
+
+/* 解决el-Cascader级联选择器数据过多时超出屏幕显示bug */
+
+.el-cascader-panel {
+    height: 210px;
+}
+
+
+/* 隐藏el-Cascader级联选择器横向滚动条 */
+
+.el-scrollbar__wrap {
+    overflow-x: hidden;
 }

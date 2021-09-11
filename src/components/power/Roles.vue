@@ -131,7 +131,7 @@
 
     <!-- 修改角色信息的对话框 -->
     <el-dialog @close="editDialogClosed" title="修改角色" :visible.sync="editDialogVisible" width="50%">
-      <el-form :model="editForm" ref="editFormRef" label-width="70px">
+      <el-form :model="editForm" ref="editFormRef" label-width="80px">
         <el-form-item label="角色名称">
           <el-input v-model="editForm.roleName" disabled></el-input>
         </el-form-item>
@@ -224,6 +224,7 @@
 			},
 			// 展示编辑角色对话框
 			async showEditDialog(id) {
+				console.log(id)
 				// 根据Id查询对应角色的信息
 				const { data: res } = await this.$http.get('roles/' + id)
 				if (res.meta.status !== 200) {
