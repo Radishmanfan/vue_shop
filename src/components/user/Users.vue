@@ -3,16 +3,16 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
+
     <!-- 卡片面板区域 -->
     <el-card>
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input v-model="querInfo.query" placeholder="请输入内容" clearable @clear="getUserList">
+          <el-input v-model="queryInfo.query" placeholder="请输入内容" clearable @clear="getUserList">
             <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
@@ -61,13 +61,15 @@
           </template>
         </el-table-column>
       </el-table>
+
       <!-- 分页区域 -->
       <el-pagination
+        background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="querInfo.pagenum"
+        :current-page="queryInfo.pagenum"
         :page-sizes="[1, 2, 5, 10]"
-        :page-size="querInfo.pagesize"
+        :page-size="queryInfo.pagesize"
         layout="sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
@@ -160,7 +162,7 @@
 				cb(new Error('请输入合法的手机号'))
 			}
 			return {
-				querInfo: {
+				queryInfo: {
 					query: '',
 					pagenum: 1, // 当前page
 					pagesize: 2 // 每页显示条数
@@ -273,7 +275,7 @@
 			// 获取用户列表
 			async getUserList() {
 				const { data: res } = await this.$http.get('users', {
-					params: this.querInfo
+					params: this.queryInfo
 				})
 				if (res.meta.status !== 200) {
 					return this.$message.error('获取用户列表失败！')
@@ -284,12 +286,12 @@
 			},
 			// 监听 pageSize改变的事件
 			handleSizeChange(pagesize) {
-				this.querInfo.pagesize = pagesize
+				this.queryInfo.pagesize = pagesize
 				this.getUserList()
 			},
 			// 监听 pagenum页码值改变的事件
 			handleCurrentChange(pagenum) {
-				this.querInfo.pagenum = pagenum
+				this.queryInfo.pagenum = pagenum
 				this.getUserList()
 			},
 			// 改变用户状态
@@ -425,4 +427,7 @@
 </script>
 
 <style lang="less">
+	.el-table {
+		margin-bottom: 10px;
+	}
 </style>
