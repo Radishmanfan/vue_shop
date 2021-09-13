@@ -65,7 +65,7 @@
         :current-page="querInfo.pagenum"
         :page-sizes="[3, 5, 10, 15]"
         :page-size="querInfo.pagesize"
-        layout="sizes, prev, pager, next, jumper"
+        layout="total,sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
     </el-card>
