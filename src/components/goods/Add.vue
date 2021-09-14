@@ -97,6 +97,7 @@
 </template>
 
 <script>
+	// 引入深拷贝
 	import _ from 'lodash'
 
 	export default {
