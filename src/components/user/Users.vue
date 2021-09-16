@@ -2,7 +2,7 @@
   <div>
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -284,7 +284,7 @@
 				this.total = res.data.total
 				// console.log(this.userList)
 			},
-			// 监听 pageSize改变的事件
+			// 监听 pagesize改变的事件
 			handleSizeChange(pagesize) {
 				this.queryInfo.pagesize = pagesize
 				this.getUserList()
@@ -383,6 +383,9 @@
 				if (res.meta.status !== 200) {
 					return this.$message.error('删除用户失败！')
 				}
+				this.queryInfo.pagenum = Math.floor(
+					(this.total - 1) / this.queryInfo.pagesize
+				)
 				this.getUserList()
 				this.$message.success('删除用户成功！')
 			},

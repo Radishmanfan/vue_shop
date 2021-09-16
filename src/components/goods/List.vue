@@ -2,7 +2,7 @@
   <div>
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
       <el-breadcrumb-item>商品列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -26,7 +26,7 @@
         <el-table-column label="#" type="index"></el-table-column>
         <el-table-column label="商品名称" prop="goods_name"></el-table-column>
         <el-table-column label="商品价格（元）" prop="goods_price" width="110px"></el-table-column>
-        <el-table-column label="商品重量" prop="goods_weight" width="70px"></el-table-column>
+        <el-table-column label="商品数量" prop="goods_number" width="70px"></el-table-column>
         <el-table-column label="创建时间" prop="add_time" width="140px">
           <template slot-scope="scope">{{scope.row.add_time|dateFormat}}</template>
         </el-table-column>
@@ -62,29 +62,29 @@
         :total="total"
       ></el-pagination>
 
-      <!-- 修改商品的对话框 -->
-      <!-- <el-dialog
+      <!-- 修改商品信息的对话框 -->
+      <el-dialog
         @close="editDialogClosed"
-        title="修改商品"
+        title="修改商品信息"
         :visible.sync="editDialogVisible"
         width="50%"
       >
-        <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px">
-          <el-form-item label="用户名">
-            <el-input v-model="editForm.username" disabled></el-input>
+        <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="80px">
+          <el-form-item label="商品名称" prop="goods_name">
+            <el-input v-model="editForm.goods_name"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="editForm.email"></el-input>
+          <el-form-item label="商品价格" prop="goods_price">
+            <el-input v-model="editForm.goods_price"></el-input>
           </el-form-item>
-          <el-form-item label="手机" prop="mobile">
-            <el-input v-model="editForm.mobile"></el-input>
+          <el-form-item label="商品数量" prop="goods_number">
+            <el-input v-model="editForm.goods_number"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editUserInfo">确 定</el-button>
+          <el-button type="primary" @click="editGoodInfo">确 定</el-button>
         </span>
-      </el-dialog>-->
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -102,7 +102,35 @@
 				// 商品列表
 				goodsList: [],
 				// 总数据条数
-				total: 0
+				total: 0,
+				// 控制修改商品对话框开启关闭
+				editDialogVisible: false,
+				// 存放编辑对话框数据
+				editForm: {},
+				// 编辑对话框验证规则
+				editFormRules: {
+					goods_name: [
+						{
+							required: true,
+							message: '请输入商品名称',
+							trigger: 'blur'
+						}
+					],
+					goods_price: [
+						{
+							required: true,
+							message: '请输入商品价格',
+							trigger: 'blur'
+						}
+					],
+					goods_number: [
+						{
+							required: true,
+							message: '请输入商品数量',
+							trigger: 'blur'
+						}
+					]
+				}
 			}
 		},
 		created() {
@@ -132,7 +160,50 @@
 				this.queryInfo.pagenum = pagenum
 				this.getGoodsList()
 			},
-
+			// 显示编辑商品对话框
+			async showEditDialog(id) {
+				const { data: res } = await this.$http.get('goods/' + id)
+				if (res.meta.status !== 200) {
+					return this.$message.error('查询商品信息失败！')
+				}
+				// console.log(res)
+				// this.$message.success('查询商品信息成功')
+				this.editForm = res.data
+				this.editDialogVisible = true
+				// console.log(this.editForm)
+			},
+			// 监听修改商品对话框的关闭
+			editDialogClosed() {
+				this.$refs.editFormRef.resetFields()
+			},
+			// 修改商品信息并提交
+			editGoodInfo() {
+				this.$refs.editFormRef.validate(async (validate) => {
+					if (!validate) return
+					// 发起修改用户请求
+					const { data: res } = await this.$http.put(
+						'goods/' + this.editForm.goods_id,
+						{
+							goods_name: this.editForm.goods_name,
+							goods_price: this.editForm.goods_price,
+							goods_number: this.editForm.goods_number,
+							goods_weight: this.editForm.goods_weight,
+							goods_cat: this.editForm.goods_cat
+						}
+					)
+					// console.log(res)
+					// 提示更新商品数据失败
+					if (res.meta.status !== 200) {
+						return this.$message.error('更新商品信息失败！')
+					}
+					// 关闭对话框
+					this.editDialogVisible = false
+					// 刷新数据列表
+					this.getGoodsList()
+					// 提示更新商品信息成功
+					this.$message.success('更新商品信息成功！')
+				})
+			},
 			// 根据Id删除对应的商品信息
 			async removeGoodById(goods_id) {
 				const confirmResult = await this.$confirm(

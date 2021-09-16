@@ -2,7 +2,7 @@
   <div>
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
       <el-breadcrumb-item>添加商品</el-breadcrumb-item>
     </el-breadcrumb>
@@ -107,9 +107,9 @@
 				// 添加商品的表单数据对象
 				addForm: {
 					goods_name: '',
-					goods_price: 0,
-					goods_weight: 0,
-					goods_number: 0,
+					goods_price: '',
+					goods_weight: '',
+					goods_number: '',
 
 					// 商品所属的分类数组
 					goods_cat: [],
@@ -345,7 +345,9 @@
 
 					// 发起请求添加商品
 					// 商品的名称必须是唯一的
+					console.log(form)
 					const { data: res } = await this.$http.post('goods', form)
+					console.log(res)
 					if (res.meta.status !== 201) {
 						return this.$message.error('添加商品失败!')
 					}
